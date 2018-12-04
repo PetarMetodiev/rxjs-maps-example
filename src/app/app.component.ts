@@ -51,24 +51,28 @@ export class AppComponent implements AfterViewInit {
       tap(log('emit: '))
     );
 
+    // autocomplete, search in a list with api call, shopping cart
     this.mergeMaps$ = fromEvent(this.mergeMapButton.nativeElement, 'click').pipe(
       mergeMap(() => fakeBackend('mergeMap')),
       scan(occurancesReducer, []),
       map(getLength)
     );
 
+    // user changes their mind in the process for waiting a response
     this.switchMaps$ = fromEvent(this.switchMapButton.nativeElement, 'click').pipe(
       switchMap(() => fakeBackend('switchMap')),
       scan(occurancesReducer, []),
       map(getLength)
     );
 
+    // useful for chat app?(que messages to be sent in order)
     this.concatMaps$ = fromEvent(this.concatMapButton.nativeElement, 'click').pipe(
       concatMap(() => fakeBackend('concatMap')),
       scan(occurancesReducer, []),
       map(getLength)
     );
 
+    // useful for login screens
     this.exhaustMaps$ = fromEvent(this.exhaustMapButton.nativeElement, 'click').pipe(
       exhaustMap(() => fakeBackend('exhaustMap')),
       scan(occurancesReducer, []),
