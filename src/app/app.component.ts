@@ -33,7 +33,14 @@ const ms = 2000;
 @Component({
   selector: 'maps-root',
   templateUrl: './app.component.html',
-  styles: []
+  styles: [`.button {
+    width: 150px;
+    height: 40px;
+    color: white;
+    background-color: rgba(91, 159,216);
+    font-size: 20px;
+    font-weight: 700;
+  }`]
 })
 export class AppComponent implements AfterViewInit {
 
@@ -47,7 +54,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('concatMapButton') concatMapButton: ElementRef<HTMLButtonElement>;
   @ViewChild('exhaustMapButton') exhaustMapButton: ElementRef<HTMLButtonElement>;
 
-  constructor(private backendService: BackendService) {}
+  constructor(private backendService: BackendService) { }
 
   ngAfterViewInit() {
     // const backend = (message) => of(message).pipe(
