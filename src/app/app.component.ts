@@ -22,6 +22,8 @@ import {
   map
 } from 'rxjs/operators';
 
+import { BackendService } from './backend.service';
+
 const occurancesReducer = (acc, curr) => [...acc, curr];
 const getLength = (arr: any[]) => arr.length;
 const log = (label: string) => (what: string) => console.log(label, what);
@@ -45,36 +47,40 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('concatMapButton') concatMapButton: ElementRef<HTMLButtonElement>;
   @ViewChild('exhaustMapButton') exhaustMapButton: ElementRef<HTMLButtonElement>;
 
+  constructor(private backendService: BackendService) {}
+
   ngAfterViewInit() {
-    const fakeBackend = (message) => of(message).pipe(
-      delay(ms),
-      tap(log('emit: '))
-    );
+    // const backend = (message) => of(message).pipe(
+    //   delay(ms),
+    //   tap(log('emit: '))
+    // );
+
+    const backend = (message) => this.backendService.getPosts().pipe(tap(() => console.log(message)));
 
     // autocomplete, search in a list with api call, shopping cart
     this.mergeMaps$ = fromEvent(this.mergeMapButton.nativeElement, 'click').pipe(
-      mergeMap(() => fakeBackend('mergeMap')),
+      mergeMap(() => backend('mergeMap')),
       scan(occurancesReducer, []),
       map(getLength)
     );
 
     // user changes their mind in the process for waiting a response
     this.switchMaps$ = fromEvent(this.switchMapButton.nativeElement, 'click').pipe(
-      switchMap(() => fakeBackend('switchMap')),
+      switchMap(() => backend('switchMap')),
       scan(occurancesReducer, []),
-      map(getLength)
+      map(getLength),
     );
 
     // useful for chat app?(que messages to be sent in order)
     this.concatMaps$ = fromEvent(this.concatMapButton.nativeElement, 'click').pipe(
-      concatMap(() => fakeBackend('concatMap')),
+      concatMap(() => backend('concatMap')),
       scan(occurancesReducer, []),
       map(getLength)
     );
 
     // useful for login screens
     this.exhaustMaps$ = fromEvent(this.exhaustMapButton.nativeElement, 'click').pipe(
-      exhaustMap(() => fakeBackend('exhaustMap')),
+      exhaustMap(() => backend('exhaustMap')),
       scan(occurancesReducer, []),
       map(getLength)
     );
